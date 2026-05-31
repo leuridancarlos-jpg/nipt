@@ -9,67 +9,84 @@ class AppColors {
   static const Color textMuted = Color(0xFF8A857A);
   static const Color accent = Color(0xFFD9FF47);
   static const Color ignore = Color(0xFF4A463E);
-  static const Color urgent = Color(0xFFFF6A2B);
-  static const Color surface = Color(0xFF1E1C16);
+  static const Color urgency = Color(0xFFFF6A2B);
 }
 
 class AppTextStyles {
-  static TextStyle heading1 = GoogleFonts.bricolageGrotesque(
+  static TextStyle displayLarge = GoogleFonts.bricolageGrotesque(
     fontSize: 48,
-    fontWeight: FontWeight.w800,
-    color: AppColors.textPrimary,
-    height: 1.05,
-  );
-
-  static TextStyle heading2 = GoogleFonts.bricolageGrotesque(
-    fontSize: 28,
     fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
+    height: 1.1,
   );
 
-  static TextStyle heading3 = GoogleFonts.bricolageGrotesque(
+  static TextStyle displayMedium = GoogleFonts.bricolageGrotesque(
+    fontSize: 32,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    height: 1.2,
+  );
+
+  static TextStyle headlineLarge = GoogleFonts.bricolageGrotesque(
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    height: 1.3,
+  );
+
+  static TextStyle headlineMedium = GoogleFonts.bricolageGrotesque(
     fontSize: 20,
-    fontWeight: FontWeight.w700,
+    fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
+    height: 1.3,
   );
 
-  static TextStyle body = GoogleFonts.hankenGrotesk(
+  static TextStyle bodyLarge = GoogleFonts.hankenGrotesk(
     fontSize: 16,
     fontWeight: FontWeight.w400,
     color: AppColors.textPrimary,
+    height: 1.5,
   );
 
-  static TextStyle bodyMuted = GoogleFonts.hankenGrotesk(
-    fontSize: 15,
+  static TextStyle bodyMedium = GoogleFonts.hankenGrotesk(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textPrimary,
+    height: 1.5,
+  );
+
+  static TextStyle bodySmall = GoogleFonts.hankenGrotesk(
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     color: AppColors.textMuted,
+    height: 1.5,
   );
 
-  static TextStyle label = GoogleFonts.jetBrainsMono(
-    fontSize: 11,
+  static TextStyle labelLarge = GoogleFonts.jetBrainsMono(
+    fontSize: 12,
     fontWeight: FontWeight.w500,
     color: AppColors.textMuted,
     letterSpacing: 1.5,
   );
 
-  static TextStyle mono = GoogleFonts.jetBrainsMono(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.textPrimary,
-  );
-
-  static TextStyle monoMuted = GoogleFonts.jetBrainsMono(
+  static TextStyle labelMedium = GoogleFonts.jetBrainsMono(
     fontSize: 11,
     fontWeight: FontWeight.w400,
     color: AppColors.textMuted,
-    letterSpacing: 0.5,
+    letterSpacing: 1.2,
   );
 
-  static TextStyle promise = GoogleFonts.hankenGrotesk(
-    fontSize: 15,
+  static TextStyle monoLarge = GoogleFonts.jetBrainsMono(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+  );
+
+  static TextStyle monoSmall = GoogleFonts.jetBrainsMono(
+    fontSize: 11,
     fontWeight: FontWeight.w400,
     color: AppColors.textMuted,
-    height: 1.5,
+    letterSpacing: 0.8,
   );
 
   static TextStyle buttonPrimary = GoogleFonts.bricolageGrotesque(
@@ -78,50 +95,68 @@ class AppTextStyles {
     color: AppColors.background,
     letterSpacing: 0.2,
   );
-
-  static TextStyle ignore = GoogleFonts.hankenGrotesk(
-    fontSize: 14,
-    fontWeight: FontWeight.w400,
-    color: AppColors.ignore,
-    decoration: TextDecoration.lineThrough,
-    decorationColor: AppColors.ignore,
-  );
 }
 
 class AppTheme {
   static ThemeData get dark {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
+    final base = ThemeData.dark();
+
+    return base.copyWith(
       scaffoldBackgroundColor: AppColors.background,
       colorScheme: const ColorScheme.dark(
         surface: AppColors.background,
-        primary: AppColors.accent,
-        secondary: AppColors.urgent,
-        onPrimary: AppColors.background,
         onSurface: AppColors.textPrimary,
+        primary: AppColors.accent,
+        onPrimary: AppColors.background,
+        secondary: AppColors.urgency,
+        onSecondary: AppColors.textPrimary,
         outline: AppColors.border,
+        surfaceContainerHighest: AppColors.card,
+        tertiary: AppColors.textMuted,
       ),
       textTheme: TextTheme(
-        displayLarge: AppTextStyles.heading1,
-        displayMedium: AppTextStyles.heading2,
-        displaySmall: AppTextStyles.heading3,
-        bodyLarge: AppTextStyles.body,
-        bodyMedium: AppTextStyles.bodyMuted,
-        labelSmall: AppTextStyles.label,
+        displayLarge: AppTextStyles.displayLarge,
+        displayMedium: AppTextStyles.displayMedium,
+        headlineLarge: AppTextStyles.headlineLarge,
+        headlineMedium: AppTextStyles.headlineMedium,
+        bodyLarge: AppTextStyles.bodyLarge,
+        bodyMedium: AppTextStyles.bodyMedium,
+        bodySmall: AppTextStyles.bodySmall,
+        labelLarge: AppTextStyles.labelLarge,
+        labelMedium: AppTextStyles.labelMedium,
+        labelSmall: AppTextStyles.monoSmall,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
-        surfaceTintColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: false,
         titleTextStyle: GoogleFonts.bricolageGrotesque(
           fontSize: 22,
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.w700,
           color: AppColors.textPrimary,
         ),
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
-      cardTheme: CardThemeData(
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: AppColors.background,
+        selectedItemColor: AppColors.accent,
+        unselectedItemColor: AppColors.textMuted,
+        type: BottomNavigationBarType.fixed,
+        elevation: 0,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        selectedLabelStyle: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 0.5,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      cardTheme: CardTheme(
         color: AppColors.card,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -135,23 +170,17 @@ class AppTheme {
           backgroundColor: AppColors.accent,
           foregroundColor: AppColors.background,
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           textStyle: AppTextStyles.buttonPrimary,
         ),
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: AppColors.background,
-        selectedItemColor: AppColors.accent,
-        unselectedItemColor: AppColors.textMuted,
-        elevation: 0,
-        type: BottomNavigationBarType.fixed,
-      ),
       dividerTheme: const DividerThemeData(
         color: AppColors.border,
         thickness: 1,
+        space: 1,
       ),
     );
   }

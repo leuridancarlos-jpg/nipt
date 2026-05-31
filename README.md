@@ -48,3 +48,60 @@ uvicorn main:app --reload
 ```
 
 De backend draait nu op `http://localhost:8000`.
+
+### Stap 4 — Test of alles werkt
+
+**Optie A — Health check (browser of curl):**
+```bash
+curl http://localhost:8000/health
+# Verwacht: {"status":"ok","service":"Nipt Backend"}
+```
+
+**Optie B — Volledige AI-test:**
+```bash
+python test_analyze.py
+```
+
+Dit stuurt een echt verzoek naar Gemini en toont:
+- Wat je MOET kennen
+- Wat je kan laten liggen
+- 5 oefenvragen
+
+**Optie C — Interactieve API-docs:**
+Open `http://localhost:8000/docs` in je browser — FastAPI genereert automatisch een testinterface.
+
+---
+
+## API
+
+### `GET /health`
+Geeft `{"status": "ok"}` terug. Gebruik dit om te checken of de server draait.
+
+### `POST /analyze`
+
+**Request body:**
+```json
+{
+  "subject": "Economie",
+  "leerstof_text": "...",
+  "old_test_text": "",
+  "known_already": ""
+}
+```
+
+**Response:**
+```json
+{
+  "must_know": [
+    {"titel": "Wet van vraag en aanbod", "status": "must_know"}
+  ],
+  "can_skip": ["Deadweight loss", "Producentensurplus"],
+  "questions": [
+    {
+      "vraag": "Wat is de evenwichtsprijs?",
+      "opties": ["A. ...", "B. ...", "C. ...", "D. ..."],
+      "juist_antwoord": "A. ..."
+    }
+  ]
+}
+```

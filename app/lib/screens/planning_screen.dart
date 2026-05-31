@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
 class PlanningScreen extends StatelessWidget {
@@ -7,17 +8,54 @@ class PlanningScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Planning')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('BINNENKORT', style: AppTextStyles.label),
-            const SizedBox(height: 16),
-            Text('Week-planning', style: AppTextStyles.heading2),
-            const SizedBox(height: 8),
-            Text('Automatische studie-blokken op basis\nvan je beschikbare tijd.', style: AppTextStyles.bodyMuted, textAlign: TextAlign.center),
-          ],
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        titleSpacing: 24,
+        title: Text(
+          'Planning',
+          style: GoogleFonts.bricolageGrotesque(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '📅',
+                style: const TextStyle(fontSize: 48),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Binnenkort',
+                style: GoogleFonts.bricolageGrotesque(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                child: Text(
+                  'Je weekplanning op basis van je toetsen en businessdoelen.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.hankenGrotesk(
+                    fontSize: 15,
+                    color: AppColors.textMuted,
+                    height: 1.55,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

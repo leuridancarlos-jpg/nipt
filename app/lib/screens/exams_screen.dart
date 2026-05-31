@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
 class ExamsScreen extends StatelessWidget {
@@ -7,23 +8,55 @@ class ExamsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Toetsen')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('TOETSEN', style: AppTextStyles.label),
-            const SizedBox(height: 16),
-            Text('Jouw toetsen', style: AppTextStyles.heading2),
-            const SizedBox(height: 8),
-            Text('Al je toetsen op één plek.', style: AppTextStyles.bodyMuted),
-          ],
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        titleSpacing: 24,
+        title: Text(
+          'Toetsen',
+          style: GoogleFonts.bricolageGrotesque(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: AppColors.accent,
-        child: const Icon(Icons.add, color: AppColors.background),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '📖',
+                style: const TextStyle(fontSize: 48),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Binnenkort',
+                style: GoogleFonts.bricolageGrotesque(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 48),
+                child: Text(
+                  'Voeg je leerstof in, Nipt filtert wat écht telt.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.hankenGrotesk(
+                    fontSize: 15,
+                    color: AppColors.textMuted,
+                    height: 1.55,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

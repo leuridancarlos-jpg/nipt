@@ -11,13 +11,20 @@ load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY:
-    raise RuntimeError("GEMINI_API_KEY niet gevonden.")
+    raise RuntimeError("GEMINI_API_KEY niet gevonden. Maak een .env bestand aan op basis van .env.example.")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
 app = FastAPI(title="Nipt Backend", version="1.0.0")
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# --- Models ---
 
 class AnalyzeRequest(BaseModel):
     subject: str
@@ -27,7 +34,7 @@ class AnalyzeRequest(BaseModel):
 
 class MustKnowItem(BaseModel):
     titel: str
-    status: str
+    status: str  # "must_know"
 
 class Question(BaseModel):
     vraag: str
@@ -40,16 +47,63 @@ class AnalyzeResponse(BaseModel):
     questions: list[Question]
 
 
-TRIAGE_SYSTEM_PROMPT = """Je bent een studiecoach voor scholieren die ondernemen. Bepaal wat MOET gekend worden en wat niet.
-Filosofie: NIPT slagen - minimale inspanning, maximaal resultaat.
-Regels:
-- Oude toets aanwezig: baseer triage op patroon van die leerkracht.
-- Geen oude toets: gebruik algemene vakpatronen.
-- Max 7 must_know items.
-- Genereer 5 oefenvragen over alleen must_know stof, elk met 4 opties.
-Antwoord ALLEEN in dit JSON-formaat:
-{"must_know":[{"titel":"...","status":"must_know"}],"can_skip":["..."],"questions":[{"vraag":"...","opties":["A. ...","B. ...","C. ...","D. ..."],"juist_antwoord":"A. ..."}]}"""
+# --- Prompts ---
 
+TRIAGE_SYSTEM_PROMPT = """Je bent een slimme studiecoach voor middelbare scholieren die ook ondernemen.
+Je taak: analyseer de leerstof en bepaal wat echt MOET geweten worden voor de toets,
+en wat NIET de moeite waard is om te studeren.
+
+Filosofie: de leerling wil NIPT slagen — minimale inspanning, maximaal resultaat.
+Geen perfectie, geen hoge punten. Gewoon slagen.
+
+Regels:
+- Als er een oude toets beschikbaar is: baseer je triage STRIKT op het patroon van die leerkracht.
+  Wat vroeg hij vorig jaar? Dat zijn de prioriteiten nu.
+- Als er geen oude toets is: gebruik algemene vakpatronen (definities, hoofdconcepten, formules die altijd terugkomen).
+- Wat de leerling al kent: markeer als lager prioriteit (maar bevestig het kort).
+- Geef MAXIMAAL 7 "moet kennen"-items. Wees meedogenloos in wat je weggooijt.
+- "Kan je laten liggen": alles wat randinformatie is, zelden gevraagd wordt, of te diep gaat.
+
+Genereer ook 5 oefenvragen over ALLEEN de "moet kennen"-stof.
+Elke vraag heeft 4 opties (A, B, C, D) en één juist antwoord.
+
+Antwoord ALTIJD in dit exacte JSON-formaat (geen markdown, geen uitleg erbuiten):
+{
+  "must_know": [
+    {"titel": "...", "status": "must_know"}
+  ],
+  "can_skip": ["...", "..."],
+  "questions": [
+    {
+      "vraag": "...",
+      "opties": ["A. ...", "B. ...", "C. ...", "D. ..."],
+      "juist_antwoord": "A. ..."
+    }
+  ]
+}"""
+
+
+def build_triage_prompt(req: AnalyzeRequest) -> str:
+    parts = [f"VAK: {req.subject}", f"\nLEERSTOF:\n{req.leerstof_text}"]
+    if req.old_test_text.strip():
+        parts.append(f"\nOUDE TOETS VAN DEZE LEERKRACHT:\n{req.old_test_text}")
+    else:
+        parts.append("\nOUDE TOETS: niet beschikbaar — gebruik algemene vakpatronen.")
+    if req.known_already.strip():
+        parts.append(f"\nWAT DE LEERLING AL KENT:\n{req.known_already}")
+    return "\n".join(parts)
+
+
+def extract_json(text: str) -> dict:
+    """Haal JSON uit de Gemini-respons, ook als er markdown omheen zit."""
+    text = text.strip()
+    # Verwijder ```json ... ``` blokken
+    text = re.sub(r"^```(?:json)?\s*", "", text)
+    text = re.sub(r"\s*```$", "", text)
+    return json.loads(text)
+
+
+# --- Endpoints ---
 
 @app.get("/health")
 def health():
@@ -60,24 +114,37 @@ def health():
 def analyze(req: AnalyzeRequest):
     if not req.leerstof_text.strip():
         raise HTTPException(status_code=400, detail="leerstof_text mag niet leeg zijn.")
-    parts = [f"VAK: {req.subject}", f"LEERSTOF:\n{req.leerstof_text}"]
-    if req.old_test_text.strip():
-        parts.append(f"OUDE TOETS:\n{req.old_test_text}")
-    if req.known_already.strip():
-        parts.append(f"AL GEKEND:\n{req.known_already}")
+
+    # Stap 1: triage met gemini-2.5-flash (slimmere model voor de kern-beslissing)
+    triage_model = genai.GenerativeModel(
+        model_name="gemini-2.5-flash",
+        system_instruction=TRIAGE_SYSTEM_PROMPT,
+    )
+
+    prompt = build_triage_prompt(req)
+
     try:
-        model = genai.GenerativeModel(model_name="gemini-2.5-flash", system_instruction=TRIAGE_SYSTEM_PROMPT)
-        raw = model.generate_content("\n".join(parts)).text
+        response = triage_model.generate_content(prompt)
+        raw = response.text
     except Exception as e:
-        raise HTTPException(status_code=502, detail=str(e))
-    text = re.sub(r"^```(?:json)?\s*", "", raw.strip())
-    text = re.sub(r"\s*```$", "", text)
+        raise HTTPException(status_code=502, detail=f"Gemini API fout: {str(e)}")
+
     try:
-        data = json.loads(text)
-        return AnalyzeResponse(
-            must_know=[MustKnowItem(**i) for i in data.get("must_know", [])],
+        data = extract_json(raw)
+    except (json.JSONDecodeError, ValueError) as e:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Kon Gemini-respons niet parsen. Raw: {raw[:300]}",
+        )
+
+    # Valideer en zet om naar response-model
+    try:
+        result = AnalyzeResponse(
+            must_know=[MustKnowItem(**item) for item in data.get("must_know", [])],
             can_skip=data.get("can_skip", []),
             questions=[Question(**q) for q in data.get("questions", [])],
         )
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Parse fout: {e}. Raw: {raw[:200]}")
+        raise HTTPException(status_code=502, detail=f"Ongeldige structuur van Gemini: {str(e)}")
+
+    return result
