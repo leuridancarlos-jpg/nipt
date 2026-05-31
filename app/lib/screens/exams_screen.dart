@@ -166,7 +166,7 @@ class _ExamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateColor = exam.isUrgent ? AppColors.urgency : AppColors.textMuted;
+    final dateColor = exam.isUrgent ? AppColors.urgent : AppColors.textMuted;
     final analyzed = exam.mustKnow.isNotEmpty || exam.canSkip.isNotEmpty;
 
     return GestureDetector(
@@ -177,7 +177,7 @@ class _ExamCard extends StatelessWidget {
           color: AppColors.card,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: exam.isUrgent ? AppColors.urgency.withOpacity(0.4) : AppColors.border,
+            color: exam.isUrgent ? AppColors.urgent.withOpacity(0.4) : AppColors.border,
             width: 1,
           ),
         ),

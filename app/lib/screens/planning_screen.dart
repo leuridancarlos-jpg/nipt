@@ -290,7 +290,7 @@ class _ExamBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = exam.isUrgent ? AppColors.urgency : AppColors.accent;
+    final color = exam.isUrgent ? AppColors.urgent : AppColors.accent;
     return Container(
       height: 52,
       padding: const EdgeInsets.all(6),

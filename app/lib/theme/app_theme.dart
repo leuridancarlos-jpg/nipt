@@ -10,6 +10,7 @@ class AppColors {
   static const Color accent = Color(0xFFD9FF47);
   static const Color ignore = Color(0xFF4A463E);
   static const Color urgency = Color(0xFFFF6A2B);
+  static const Color urgent = Color(0xFFFF6A2B);
 }
 
 class AppTextStyles {
