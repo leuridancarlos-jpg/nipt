@@ -1,0 +1,16 @@
+# Flutter build artifacts
+app/.dart_tool/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/build/
+
+# Python
+backend/__pycache__/
+backend/*.pyc
+backend/venv/
+backend/.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
