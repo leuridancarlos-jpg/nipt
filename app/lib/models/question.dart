@@ -10,10 +10,20 @@ class Question {
   });
 
   factory Question.fromJson(Map<String, dynamic> json) {
+    final opties = List<String>.from(json['opties'] as List);
+    // Backend stuurt juist_antwoord als string (bv. "A. ..."), zet om naar index
+    final juistRaw = json['juist_antwoord'] ?? json['juistAntwoord'];
+    int juistIndex = 0;
+    if (juistRaw is int) {
+      juistIndex = juistRaw;
+    } else if (juistRaw is String) {
+      juistIndex = opties.indexWhere((o) => o == juistRaw);
+      if (juistIndex < 0) juistIndex = 0;
+    }
     return Question(
       vraag: json['vraag'] as String,
-      opties: List<String>.from(json['opties'] as List),
-      juistAntwoord: json['juistAntwoord'] as int,
+      opties: opties,
+      juistAntwoord: juistIndex,
     );
   }
 

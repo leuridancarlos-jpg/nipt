@@ -85,10 +85,9 @@ class ExamProvider extends ChangeNotifier {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
               'subject': subject,
-              'date': date.toIso8601String(),
-              'leerstof': leerstofText,
-              'old_test': oldTestText,
-              'known_already': knownAlready,
+              'leerstof_text': leerstofText,
+              'old_test_text': oldTestText,
+              'known_already': knownAlready.join(', '),
             }),
           )
           .timeout(const Duration(seconds: 30));
@@ -98,7 +97,7 @@ class ExamProvider extends ChangeNotifier {
 
         final mustKnowRaw = data['must_know'] as List? ?? [];
         final mustKnow = mustKnowRaw
-            .map((e) => MustKnowItem(titel: e as String))
+            .map((e) => MustKnowItem.fromJson(e as Map<String, dynamic>))
             .toList();
 
         final canSkip = List<String>.from(data['can_skip'] as List? ?? []);

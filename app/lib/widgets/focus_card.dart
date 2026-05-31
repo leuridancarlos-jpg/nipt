@@ -17,7 +17,7 @@ class FocusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateColor = exam.isUrgent ? AppColors.urgency : AppColors.textMuted;
+    final dateColor = exam.isUrgent ? AppColors.urgent : AppColors.textMuted;
     final dateLabel = _buildDateLabel();
 
     return Container(
@@ -89,11 +89,11 @@ class FocusCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
               color: exam.isUrgent
-                  ? AppColors.urgency.withOpacity(0.15)
+                  ? AppColors.urgent.withOpacity(0.15)
                   : AppColors.border,
               borderRadius: BorderRadius.circular(8),
               border: exam.isUrgent
-                  ? Border.all(color: AppColors.urgency.withOpacity(0.4), width: 1)
+                  ? Border.all(color: AppColors.urgent.withOpacity(0.4), width: 1)
                   : null,
             ),
             child: Text(

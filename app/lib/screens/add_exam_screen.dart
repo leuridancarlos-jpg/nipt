@@ -56,15 +56,15 @@ class _AddExamScreenState extends State<AddExamScreen> {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.urgency, width: 1),
+        borderSide: const BorderSide(color: AppColors.urgent, width: 1),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.urgency, width: 1.5),
+        borderSide: const BorderSide(color: AppColors.urgent, width: 1.5),
       ),
       errorStyle: GoogleFonts.hankenGrotesk(
         fontSize: 12,
-        color: AppColors.urgency,
+        color: AppColors.urgent,
       ),
     );
   }
@@ -118,7 +118,7 @@ class _AddExamScreenState extends State<AddExamScreen> {
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
-            side: const BorderSide(color: AppColors.urgency),
+            side: const BorderSide(color: AppColors.urgent),
           ),
         ),
       );
@@ -160,7 +160,7 @@ class _AddExamScreenState extends State<AddExamScreen> {
           duration: const Duration(seconds: 5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
-            side: const BorderSide(color: AppColors.urgency),
+            side: const BorderSide(color: AppColors.urgent),
           ),
         ),
       );

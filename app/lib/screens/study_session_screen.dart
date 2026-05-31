@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/exam.dart';
+import '../models/question.dart';
 import '../theme/app_theme.dart';
 import 'completion_screen.dart';
 
@@ -132,7 +133,7 @@ class _StudySessionScreenState extends State<StudySessionScreen>
               style: GoogleFonts.hankenGrotesk(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.urgency,
+                color: AppColors.urgent,
               ),
             ),
           ),

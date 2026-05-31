@@ -45,7 +45,7 @@ class ExamDetailScreen extends StatelessWidget {
               _formatDate(exam.date),
               style: GoogleFonts.jetBrainsMono(
                 fontSize: 10,
-                color: exam.isUrgent ? AppColors.urgency : AppColors.textMuted,
+                color: exam.isUrgent ? AppColors.urgent : AppColors.textMuted,
                 letterSpacing: 0.8,
               ),
             ),

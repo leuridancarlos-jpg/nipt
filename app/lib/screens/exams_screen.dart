@@ -210,7 +210,7 @@ class _ExamCard extends StatelessWidget {
                       '${exam.daysUntil == 0 ? "Vandaag!" : exam.daysUntil == 1 ? "Morgen!" : "${exam.daysUntil} dagen"}',
                       style: GoogleFonts.jetBrainsMono(
                         fontSize: 10,
-                        color: AppColors.urgency,
+                        color: AppColors.urgent,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
                       ),

@@ -108,7 +108,7 @@ class AppTheme {
         onSurface: AppColors.textPrimary,
         primary: AppColors.accent,
         onPrimary: AppColors.background,
-        secondary: AppColors.urgency,
+        secondary: AppColors.urgent,
         onSecondary: AppColors.textPrimary,
         outline: AppColors.border,
         surfaceContainerHighest: AppColors.card,
