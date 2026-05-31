@@ -5,6 +5,9 @@ import '../models/exam.dart';
 import '../providers/exam_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/focus_card.dart';
+import 'add_exam_screen.dart';
+import 'exam_detail_screen.dart';
+import 'study_session_screen.dart';
 
 class TodayScreen extends StatefulWidget {
   const TodayScreen({super.key});
@@ -239,7 +242,14 @@ class _TodayScreenState extends State<TodayScreen>
                   ),
                   const SizedBox(height: 28),
                   GestureDetector(
-                    onTap: () => provider.addDemoExam(),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AddExamScreen(),
+                        ),
+                      );
+                    },
                     child: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 17),
@@ -256,12 +266,27 @@ class _TodayScreenState extends State<TodayScreen>
                       ),
                       child: Center(
                         child: Text(
-                          'Probeer met demo-toets',
+                          'Toets toevoegen',
                           style: GoogleFonts.bricolageGrotesque(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: AppColors.background,
                           ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () => provider.addDemoExam(),
+                    child: Center(
+                      child: Text(
+                        'Demo proberen',
+                        style: GoogleFonts.hankenGrotesk(
+                          fontSize: 13,
+                          color: AppColors.textMuted,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.textMuted,
                         ),
                       ),
                     ),
@@ -309,80 +334,20 @@ class _TodayScreenState extends State<TodayScreen>
   }
 
   void _onStartPractice(BuildContext context, Exam exam) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.card,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.border,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Oefen sessie',
-                style: GoogleFonts.bricolageGrotesque(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Oefenmodaliteit wordt binnenkort toegevoegd. Ga intussen terug naar je business.',
-                style: GoogleFonts.hankenGrotesk(
-                  fontSize: 15,
-                  color: AppColors.textMuted,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 28),
-              GestureDetector(
-                onTap: () => Navigator.pop(ctx),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 17),
-                  decoration: BoxDecoration(
-                    color: AppColors.accent,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.accent.withOpacity(0.22),
-                        blurRadius: 18,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Sluiten',
-                      style: GoogleFonts.bricolageGrotesque(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.background,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+    if (exam.questions.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => StudySessionScreen(exam: exam),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ExamDetailScreen(exam: exam),
+        ),
+      );
+    }
   }
 }
