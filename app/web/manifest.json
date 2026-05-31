@@ -1,0 +1,12 @@
+{
+    "name": "Nipt",
+    "short_name": "Nipt",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#14130F",
+    "theme_color": "#14130F",
+    "description": "Minimale studie-app voor jonge ondernemers",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": []
+}

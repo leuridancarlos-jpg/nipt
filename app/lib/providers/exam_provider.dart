@@ -78,7 +78,8 @@ class ExamProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      const baseUrl = 'http://10.0.2.2:8000';
+      // Web gebruikt localhost, Android-emulator gebruikt 10.0.2.2
+      final baseUrl = kIsWeb ? 'http://localhost:8000' : 'http://10.0.2.2:8000';
       final response = await http
           .post(
             Uri.parse('$baseUrl/analyze'),
